@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 
@@ -57,10 +59,67 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
 
-</script>
+    function playSound(code) {
+      let soundSelector = `audio[data-key='${code}']`;
+      let audioElement = document.querySelector(soundSelector);
+      if (audioElement != undefined) {
+        audioElement.currentTime = 0;
+        audioElement.play();
+      }
+    }
+
+    function highlightBox(code) {
+      let boxSelector = `.key[data-key='${code}']`;
+      let boxElement = document.querySelector(boxSelector);
+      if (boxElement != undefined) boxElement.classList.add('playing');
+    }
+
+    function removeHighlightBox(e) {
+      // let boxSelector = `.key[data-key='${code}']`;
+      // let boxElement = document.querySelector(boxSelector);
+      // if (boxElement != undefined) boxElement.classList.remove('playing');
+
+      // console.log(e);
+      if (e.propertyName !== 'transform') return;
+      console.log(e.propertyName);
+      this.classList.remove('playing');
+
+    }
+
+    function setupSound() {
+      window.addEventListener('keydown', function keydown(ev) {
+        let code = ev.keyCode;
+
+        playSound(code);
+
+        highlightBox(code);
+      });
+
+
+      //window.addEventListener('keyup', function keyUp(ev) {
+      //let code = ev.keyCode;
+
+      //removeHighlightBox(code);
+      // let soundSelector = `audio[data-key='${code}']`;
+      // let audioElement = document.querySelector(soundSelector);
+      // if (audioElement != undefined) audioElement.play();
+      //});
+
+
+    }
+
+    function setupTransition(selector) {
+      let keyBoxes = document.querySelectorAll('.key');
+      keyBoxes.forEach(keyBox => keyBox.addEventListener('transitionend', removeHighlightBox));
+    }
+
+    setupSound();
+    setupTransition();
+  </script>
 
 
 </body>
+
 </html>
